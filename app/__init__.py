@@ -1,0 +1,1 @@
+"""EGE API application package."""
