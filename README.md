@@ -5,26 +5,54 @@ FastAPI-приложение со слоистой структурой: кон�
 ## Требования
 
 - Python 3.11+
+- [Poetry](https://python-poetry.org/) 2+
+- PostgreSQL 14+
 
 ## Установка и запуск
 
 ```bash
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload
+poetry install
 ```
 
-На Linux/macOS активация окружения: `source .venv/bin/activate`.
+Dev (по умолчанию читается `.env.development`):
 
-Приложение будет доступно по адресу [http://127.0.0.1:8000](http://127.0.0.1:8000).
+```bash
+poetry run uvicorn app.main:app --reload
+```
 
-- Документация OpenAPI: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+Прод — скопируйте пример и заполните секреты:
+
+```bash
+copy .env.production.example .env.production
+```
+
+На Linux/macOS: `cp .env.production.example .env.production`.
+
+```bash
+set APP_ENV=production
+poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+На Linux/macOS: `APP_ENV=production poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000`.
+
+Файл выбирается по `APP_ENV`: `development` / `dev` → `.env.development`, `production` / `prod` → `.env.production`. Переменные окружения процесса важнее значений из файла.
+
+Приложение: [http://127.0.0.1:8000](http://127.0.0.1:8000).
+
+- OpenAPI: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 - Healthcheck: [http://127.0.0.1:8000/api/v1/health](http://127.0.0.1:8000/api/v1/health)
+
+Форматирование: `poetry run black --check .`
 
 ## Переменные окружения
 
-Скопируйте значения из `.env` и при необходимости измените `SECRET_KEY` и `DATABASE_URL`. По умолчанию используется асинхронный SQLite (`sqlite+aiosqlite:///./app.db`). Для PostgreSQL: `postgresql+asyncpg://user:pass@host:5432/dbname` (добавьте `asyncpg` в зависимости).
+Основная БД — PostgreSQL через `asyncpg`.
+
+Задайте `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_DB` — из них соберётся DSN. Либо укажите `DATABASE_URL` целиком (`postgresql+asyncpg://user:pass@host:5432/dbname`); обычный `postgresql://` будет приведён к `postgresql+asyncpg://`.
+
+В production `DEBUG` должен быть `false`, `SECRET_KEY` — не дефолтный.
+
+Создайте базу до запуска, например: `CREATE DATABASE ege;`.
 
 ## Структура
 
@@ -37,4 +65,6 @@ app/
   models/          # ORM-модели
   schemas/         # Pydantic-схемы
   services/        # бизнес-логика
+.env.development   # локальные настройки
+.env.production    # прод (не в git)
 ```

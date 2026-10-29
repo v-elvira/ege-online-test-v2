@@ -1,0 +1,33 @@
+[project]
+name = "ege-api"
+version = "0.1.0"
+description = "EGE API"
+readme = "README.md"
+requires-python = ">=3.11,<4.0"
+dependencies = [
+    "fastapi>=0.116.0",
+    "uvicorn[standard]>=0.35.0",
+    "pydantic>=2.11.0",
+    "pydantic-settings>=2.10.0",
+    "sqlalchemy[asyncio]>=2.0.41",
+    "asyncpg>=0.30.0",
+    "greenlet>=3.2.0",
+    "email-validator>=2.2.0",
+]
+
+[tool.poetry]
+packages = [{ include = "app" }]
+
+[dependency-groups]
+dev = [
+    "black>=25.0.0",
+    "flake8 (>=7.5.0,<8.0.0)",
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]

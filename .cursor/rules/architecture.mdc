@@ -1,0 +1,19 @@
+---
+description: Слои приложения FastAPI — куда класть код
+alwaysApply: true
+---
+
+# Архитектура
+
+Стек: FastAPI + async SQLAlchemy 2 + PostgreSQL (`asyncpg`) + Alembic + JWT. Форматтер: Black.
+
+Слои (не смешивать):
+
+- `app/api/` — роуты, статус-коды, `Depends`. Без SQL и бизнес-правил.
+- `app/schemas/` — Pydantic v2 (вход/выход). ORM-модели сюда не импортировать.
+- `app/models/` — SQLAlchemy Mapped. Не отдавать в JSON напрямую.
+- `app/services/` — бизнес-логика и работа с сессией.
+- `app/core/` — settings, JWT, пароли.
+- `alembic/` — миграции. Схему БД не менять через `create_all` в проде.
+
+Эндпоинт только вызывает сервис и мапит ошибки в `HTTPException`.

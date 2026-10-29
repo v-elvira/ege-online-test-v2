@@ -1,0 +1,26 @@
+---
+description: FastAPI и async — эндпоинты, Depends, event loop
+globs: app/**/*.py
+alwaysApply: false
+---
+
+# FastAPI и async
+
+- Хендлеры, сервисы, доступ к БД — только `async def`.
+- Не вызывать `time.sleep`, синхронный `requests`, sync SQLAlchemy, `os.popen` в async-коде.
+- CPU/блокирующий код — `asyncio.to_thread(...)` (как хеш пароля в `app/core/security.py`).
+- Сессию БД брать через `Depends(get_db)`, сервис — через `Depends` в `app/api/deps.py`.
+- Явно задавать `response_model` и статус (`201`, `204`).
+- Ошибки клиента: `HTTPException` + `status.HTTP_*`, не голый `Exception`.
+- Для списков и фильтров — query-параметры Pydantic/аннотации, не парсить `Request` вручную.
+
+```python
+# ❌ BAD
+def list_items(db: Session):
+    return db.query(Item).all()
+
+# ✅ GOOD
+@router.get("/", response_model=list[ItemRead])
+async def list_items(service: ItemService = Depends(get_item_service)) -> list[ItemRead]:
+    return await service.list_items()
+```

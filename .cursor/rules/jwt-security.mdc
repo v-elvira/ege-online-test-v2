@@ -1,0 +1,16 @@
+---
+description: JWT, пароли и секреты
+globs: app/core/**/*.py,app/api/**/*.py
+alwaysApply: false
+---
+
+# JWT и безопасность
+
+- Access-токен — настоящий JWT (например PyJWT / python-jose): `sub`, `exp`, подпись HMAC (`HS256`) или лучше.
+- Не изобретать `payload.signature` строками. Homemade HMAC в `security.py` заменять на JWT при работе с авторизацией.
+- Секрет только из env (`SECRET_KEY`), не хардкодить, в git не класть `.env` с прод-секретом. Дефолт `change-me-in-production` нельзя оставлять в проде.
+- В API: `Authorization: Bearer <token>`. Зависимость вроде `get_current_user` → 401, если токен невалиден/истёк.
+- Пароли: хеш (сейчас sha256+salt через `to_thread`; для прода предпочтителен passlib/argon2 или bcrypt). Сверять через `hmac.compare_digest` / библиотеку, не `==`.
+- Не класть пароль, полный токен и `secret_key` в логи и ответы схем.
+- CORS: в проде только реальные origin фронта, не `*`.
+- TTL задаётся `access_token_expire_minutes`. Refresh — отдельно, если понадобится; access не делать бессрочным.

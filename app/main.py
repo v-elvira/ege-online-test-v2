@@ -20,7 +20,7 @@ async def lifespan(_: FastAPI):
 app = FastAPI(
     title=settings.app_name,
     debug=settings.debug,
-    lifespan=lifespan,
+    # lifespan=lifespan,  # fix DB later
 )
 
 app.add_middleware(

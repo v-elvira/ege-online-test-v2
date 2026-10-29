@@ -1,0 +1,26 @@
+---
+description: PostgreSQL, async SQLAlchemy 2 и Alembic
+globs: app/db/**/*.py,app/models/**/*.py,app/services/**/*.py,alembic/**/*.py
+alwaysApply: false
+---
+
+# БД: PostgreSQL, SQLAlchemy, Alembic
+
+- URL: `postgresql+asyncpg://...` в settings/`DATABASE_URL`. Не `psycopg2` и не sync `create_engine`.
+- Engine: `create_async_engine`. Сессии: `async_sessionmaker(..., expire_on_commit=False)`.
+- Запросы: `select()`, `await session.scalars(...)`, `await session.get(...)`. Не `session.query()`.
+- Модели: `Mapped[...]` + `mapped_column`. Таблица — `__tablename__` во множественном числе.
+- Даты: `DateTime(timezone=True)`.
+- После смены модели — миграция Alembic (`revision --autogenerate`), не править прод-схему руками.
+- В ревью проверять upgrade/downgrade. Не коммитить пустые миграции.
+- `Base.metadata.create_all` — только локальный bootstrap; источник схемы — Alembic.
+- Транзакция: `commit` после успешной записи; при ошибке сессия не должна остаться dirty (контекст `get_db`).
+
+```python
+# ❌ BAD
+users = session.query(User).filter_by(email=email).all()
+
+# ✅ GOOD
+result = await session.scalars(select(User).where(User.email == email))
+user = result.first()
+```

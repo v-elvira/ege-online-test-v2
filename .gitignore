@@ -1,5 +1,8 @@
 .env
+.env.production
+.env.*.local
 .venv/
+
 venv/
 __pycache__/
 *.py[cod]
@@ -9,5 +12,3 @@ __pycache__/
 .ruff_cache/
 .idea/
 .vscode/
-*.db
-*.sqlite3

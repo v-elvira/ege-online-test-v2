@@ -1,0 +1,23 @@
+---
+description: Black обязателен до коммита
+alwaysApply: true
+---
+
+# Форматирование: Black
+
+Перед любым коммитом Python должен проходить `black --check`.
+
+- Стиль: Black, длина строки проекта по умолчанию (88), если в `pyproject.toml` не задано иначе.
+- Не спорить с Black: после правок прогнать `black .` (или затронутые файлы).
+- Не коммитить, если `black --check .` падает.
+- Хук: `.pre-commit-config.yaml` с `psf/black` на `pre-commit`. Не обходить через `--no-verify`.
+- Не смешивать в одном коммите логику и массовый reformat чужих файлов.
+
+```bash
+# локально до git commit
+poetry run black --check .
+# если упало
+poetry run black .
+```
+
+Если хука ещё нет — при задаче про коммит/CI добавить `pre-commit` + `black`, не оставлять формат «на глаз».
