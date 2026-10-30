@@ -42,7 +42,11 @@ poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000
 - OpenAPI: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 - Healthcheck: [http://127.0.0.1:8000/api/v1/health](http://127.0.0.1:8000/api/v1/health)
 
-Форматирование: `poetry run black --check .`
+Проверка линтеров: 
+`poetry run ruff check .`
+
+Проверка форматирования:
+`poetry run ruff format --check .`
 
 ## Переменные окружения
 

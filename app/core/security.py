@@ -2,7 +2,7 @@ import asyncio
 import hashlib
 import hmac
 import secrets
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from app.core.config import settings
 
@@ -23,7 +23,7 @@ def _verify_password(password: str, hashed: str) -> bool:
 
 
 def _create_access_token(subject: str, expires_delta: timedelta | None = None) -> str:
-    expire = datetime.now(timezone.utc) + (
+    expire = datetime.now(UTC) + (
         expires_delta or timedelta(minutes=settings.access_token_expire_minutes)
     )
     payload = f"{subject}|{int(expire.timestamp())}"
@@ -46,7 +46,7 @@ def _verify_access_token(token: str) -> str | None:
         if not hmac.compare_digest(signature, expected):
             return None
         subject, exp = payload.split("|", 1)
-        if int(exp) < int(datetime.now(timezone.utc).timestamp()):
+        if int(exp) < int(datetime.now(UTC).timestamp()):
             return None
         return subject
     except (ValueError, TypeError):
