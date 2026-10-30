@@ -17,6 +17,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "pytest>=9.2.0",
     "ruff>=0.17.3,<0.18.0",
 ]
 
@@ -41,3 +42,8 @@ ignore = ["B008"]
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = "-v"
