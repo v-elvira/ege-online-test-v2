@@ -5,19 +5,20 @@ FastAPI-приложение со слоистой структурой: кон�
 ## Требования
 
 - Python 3.11+
-- [Poetry](https://python-poetry.org/) 2+
+- [uv](https://astral.sh) 0.5+
 - PostgreSQL 14+
 
 ## Установка и запуск
 
 ```bash
-poetry install
+uv venv
+uv sync
 ```
 
 Dev (по умолчанию читается `.env.development`):
 
 ```bash
-poetry run uvicorn app.main:app --reload
+uv run uvicorn app.main:app --reload
 ```
 
 Прод — скопируйте пример и заполните секреты:
@@ -30,10 +31,10 @@ copy .env.production.example .env.production
 
 ```bash
 set APP_ENV=production
-poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000
+uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
-На Linux/macOS: `APP_ENV=production poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000`.
+На Linux/macOS: `APP_ENV=production uv run uvicorn app.main:app --host 0.0.0.0 --port 8000`.
 
 Файл выбирается по `APP_ENV`: `development` / `dev` → `.env.development`, `production` / `prod` → `.env.production`. Переменные окружения процесса важнее значений из файла.
 
@@ -43,10 +44,10 @@ poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000
 - Healthcheck: [http://127.0.0.1:8000/api/v1/health](http://127.0.0.1:8000/api/v1/health)
 
 Проверка линтеров: 
-`poetry run ruff check .`
+`uv run ruff check .`
 
 Проверка форматирования:
-`poetry run ruff format --check .`
+`uv run ruff format --check .`
 
 ## Переменные окружения
 
