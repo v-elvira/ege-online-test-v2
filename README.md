@@ -11,7 +11,6 @@ FastAPI-приложение со слоистой структурой: кон�
 ## Установка и запуск
 
 ```bash
-uv venv
 uv sync
 ```
 
@@ -72,4 +71,18 @@ app/
   services/        # бизнес-логика
 .env.development   # локальные настройки
 .env.production    # прод (не в git)
+```
+
+### Активация Git-хуков (Ruff)
+Для включения автоматической проверки кода перед коммитом:
+```
+uv sync
+uv run pre-commit install --overwrite
+```
+(будет создан/пересоздан хук .git/hooks/pre-commit)
+
+
+Для запуска проверки без коммита:
+```
+uv run pre-commit run --all-files
 ```

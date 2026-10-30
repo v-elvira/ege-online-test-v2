@@ -1,0 +1,14 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-lint-local
+        name: Ruff Линтер (Локальный)
+        entry: uv run ruff check       # Проверит только изменяемые файлы!
+        language: system
+        types: [python]
+
+      - id: ruff-format-local
+        name: Ruff Форматтер (Локальный)
+        entry: uv run ruff format --check
+        language: system
+        types: [python]
